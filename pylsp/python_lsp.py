@@ -236,7 +236,7 @@ class PythonLSPServer(MethodDispatcher):
         workspace = self._match_uri_to_workspace(doc_uri)
         doc = workspace.get_document(doc_uri) if doc_uri else None
         hook_handlers = self.config.plugin_manager.subset_hook_caller(hook_name, self.config.disabled_plugins)
-        # point where config, workspace, document are passed to hook handlerss
+        # point where config, workspace, document are passed to hook handlers
         return hook_handlers(config=self.config, workspace=workspace, document=doc, **kwargs)
 
     def capabilities(self):

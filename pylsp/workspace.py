@@ -32,6 +32,7 @@ def lock(method):
             return method(self, *args, **kwargs)
     return wrapper
 
+
 # object that is available for plugins
 class Workspace:
 
