@@ -411,6 +411,7 @@ class PythonLSPServer(MethodDispatcher):
         self.lint(textDocument['uri'], is_saved=True)
 
     def m_text_document__did_change(self, contentChanges=None, textDocument=None, **_kwargs):
+        # called for textDocument/didChange
         workspace = self._match_uri_to_workspace(textDocument['uri'])
         for change in contentChanges:
             workspace.update_document(
@@ -418,6 +419,7 @@ class PythonLSPServer(MethodDispatcher):
                 change,
                 version=textDocument.get('version')
             )
+        # lint triggers a diagnostics message in a debounced fashion
         self.lint(textDocument['uri'], is_saved=False)
 
     def m_text_document__did_save(self, textDocument=None, **_kwargs):
