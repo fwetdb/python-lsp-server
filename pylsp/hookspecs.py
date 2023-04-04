@@ -49,6 +49,7 @@ def pylsp_document_did_open(config, workspace, document):
     pass
 
 
+# the method can be hooked into by plugins which will receive the args
 @hookspec
 def pylsp_document_did_save(config, workspace, document):
     pass

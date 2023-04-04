@@ -145,6 +145,10 @@ def start_ws_lang_server(port, check_parent_process, handler_class):
         asyncio.run(run_server())
 
 
+# calls methods for a given message type e.g. m_text_document__did_change for textDocument/didChange
+# the logic lives within pylsp_jsonrpc.MethodDispatcher
+
+# in general, a lot of the calling logic is contained within pylsp_jsonrpc e.g. Endpoint, JsonRpcStreamReader, JsonRpcStreamWriter
 class PythonLSPServer(MethodDispatcher):
     """ Implementation of the Microsoft VSCode Language Server Protocol
     https://github.com/Microsoft/language-server-protocol/blob/master/versions/protocol-1-x.md
@@ -232,6 +236,7 @@ class PythonLSPServer(MethodDispatcher):
         workspace = self._match_uri_to_workspace(doc_uri)
         doc = workspace.get_document(doc_uri) if doc_uri else None
         hook_handlers = self.config.plugin_manager.subset_hook_caller(hook_name, self.config.disabled_plugins)
+        # point where config, workspace, document are passed to hook handlerss
         return hook_handlers(config=self.config, workspace=workspace, document=doc, **kwargs)
 
     def capabilities(self):
@@ -369,6 +374,7 @@ class PythonLSPServer(MethodDispatcher):
         return flatten(self._hook('pylsp_document_highlight', doc_uri, position=position)) or None
 
     def hover(self, doc_uri, position):
+        # might be involved in go to definition
         return self._hook('pylsp_hover', doc_uri, position=position) or {'contents': ''}
 
     @_utils.debounce(LINT_DEBOUNCE_S, keyed_by='doc_uri')
@@ -382,6 +388,7 @@ class PythonLSPServer(MethodDispatcher):
             )
 
     def references(self, doc_uri, position, exclude_declaration):
+        # might derive references for go to definition
         return flatten(self._hook(
             'pylsp_references', doc_uri, position=position,
             exclude_declaration=exclude_declaration
