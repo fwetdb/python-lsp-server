@@ -33,6 +33,7 @@ def lock(method):
     return wrapper
 
 
+# object that is available for plugins
 class Workspace:
 
     M_PUBLISH_DIAGNOSTICS = 'textDocument/publishDiagnostics'
@@ -263,6 +264,7 @@ class Workspace:
             self.__rope_autoimport.close()
 
 
+# object that is available for plugins
 class Document:
 
     def __init__(self, uri, workspace, source=None, version=None, local=True, extra_sys_path=None,
@@ -380,6 +382,7 @@ class Document:
 
     @lock
     def jedi_script(self, position=None, use_document_path=False):
+        # get jedi.Script for Document which might be involved for go to definition
         extra_paths = []
         environment_path = None
         env_vars = None
